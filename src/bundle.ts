@@ -24,7 +24,9 @@ export default class KonFetch {
 		elLoader.style.setProperty('display', 'none');
 		elLoader.appendChild(parser.parseFromString(elLoaderDOM, 'text/html').body.firstChild as HTMLElement);
 
-		document.body.appendChild(elLoader);
+		if (!document.body.querySelector('#lds-loader')) {
+			document.body.appendChild(elLoader);
+		}
 	}
 
 	static init() {

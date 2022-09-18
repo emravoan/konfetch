@@ -6,7 +6,12 @@ export default class Utils {
 		elLoader?.style.setProperty('display', isHide ? 'none' : '');
 	}
 
-	static async fetch(url: string, method: string, body?: FormData|null, option: IFetchOption = { isShowLoader: true }) {
+	static async fetch(
+		url: string,
+		method: string,
+		body?: FormData | null,
+		option: IFetchOption = { isShowLoader: true }
+	) {
 		const { isShowLoader, isReloadOnSuccess, isReloadOnError } = option;
 
 		// show loading screen
