@@ -4,7 +4,6 @@
   "description": "Javascript Fetch API Utility",
   "author": "EM Ravoan",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "build": "rollup --config --configPlugin typescript",
     "watch": "rollup --config --configPlugin typescript -w"
