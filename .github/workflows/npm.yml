@@ -1,6 +1,7 @@
 name: Publish Package to NPMJS
 
 on:
+  workflow_dispatch: # for manual workflow trigger
   release:
     types: [created]
 
