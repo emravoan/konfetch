@@ -1,6 +1,6 @@
-.*
-src
-rollup.config.ts
+# .*
+# src
+# rollup.config.ts
 !node_modules
 !dist
 !index.js
