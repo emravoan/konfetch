@@ -8,8 +8,10 @@
     "build": "rollup --config --configPlugin typescript",
     "watch": "rollup --config --configPlugin typescript -w"
   },
+  "dependencies": {
+    "@emravoan/konloader": "^1.0.1"
+  },
   "devDependencies": {
-    "@emravoan/konloader": "^1.0.1",
     "@rollup/plugin-typescript": "^8.3.4",
     "@types/node": "^18.7.8",
     "autoprefixer": "^10.4.8",
