@@ -1,23 +1,33 @@
 import { IFetchOption, qs } from './constant';
+import KonLoader from '@emravoan/konloader';
+import '@emravoan/konloader/dist/bundle.css';
 
 export default class Utils {
-	static toggleLoader(isHide: boolean = false) {
-		const elLoader = qs('#lds-loader') as HTMLElement;
-		elLoader?.style.setProperty('display', isHide ? 'none' : '');
-	}
-
 	static async fetch(
 		url: string,
 		method: string,
 		body?: FormData | null,
 		option: IFetchOption = { isShowLoader: true }
 	) {
+		const konloader = KonLoader.getInstance();
 		const { isShowLoader, isReloadOnSuccess, isReloadOnError } = option;
 
-		// show loading screen
-		if (isShowLoader || typeof isShowLoader === 'undefined') Utils.toggleLoader();
+		konloader.initialize();
+		konloader.hide();
+		konloader.hideFlash();
 
-		return fetch(url, { method: method || 'GET', body: body })
+		if (isShowLoader || typeof isShowLoader === 'undefined') {
+			konloader.show();
+		}
+
+		return fetch(url, {
+			method: method || 'GET',
+			headers: {
+				Accept: 'application/json',
+				'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZjZmZjkwZDI1OGVkNTdhNjBjNGYyY2Q2ZGZiNzI5MzIzNzNhMDljZmFkMjMwNDIxODBhZTBkMDEyZGUwODc4OTQzZWJlNDA1MDllNGE4MTciLCJpYXQiOjE2Njc4MTM4NzUuOTIyNjExLCJuYmYiOjE2Njc4MTM4NzUuOTIyNjE2LCJleHAiOjE2OTkzNDk4NzUuOTIwMTM5LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.llhkdDpYQCp_ZREtnCgTvvLglNJrPBSNeFeWsiKxEOzncAVJFC5Gcp0AjM81bkNKzUXunac3Sja0RpjkZT94FA`,
+			},
+			body: body,
+		})
 			.then(async res => {
 				// redirect handler
 				if (res.redirected) {
@@ -65,7 +75,9 @@ export default class Utils {
 				window.location.reload();
 			})
 			.finally(() => {
-				if (isShowLoader || typeof isShowLoader === 'undefined') Utils.toggleLoader(true);
+				if (isShowLoader || typeof isShowLoader === 'undefined') {
+					konloader.hide();
+				}
 			});
 	}
 }
