@@ -1,6 +1,6 @@
 {
   "name": "@emravoan/konfetch",
-  "version": "1.0.5-beta6",
+  "version": "2.0.0-alpha1",
   "description": "Javascript Fetch API Utility",
   "author": "EM Ravoan",
   "license": "MIT",
@@ -9,14 +9,15 @@
     "watch": "rollup --config --configPlugin typescript -w"
   },
   "dependencies": {
-    "@emravoan/konloader": "^1.0.1"
+    "@emravoan/konloader": "^2.0.0",
+    "@emravoan/kontoast": "^1.0.2"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^23.0.2",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-typescript": "^8.3.4",
     "@types/node": "^18.7.8",
-    "autoprefixer": "^10.4.8",
     "esbuild": "^0.15.7",
-    "postcss": "^8.4.16",
     "prettier": "^2.7.1",
     "rollup": "^2.78.1",
     "rollup-plugin-copy-assets": "^2.0.3",

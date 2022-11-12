@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"]
+    }
   }
 }

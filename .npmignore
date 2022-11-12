@@ -1,8 +1,7 @@
 .*
+*.json
+*.config.ts
 src
-rollup.config.ts
-!node_modules
+
 !dist
 !index.js
-!README.md
-!LICENSE

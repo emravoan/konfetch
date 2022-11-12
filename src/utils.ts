@@ -1,83 +1,76 @@
-import { IFetchOption, qs } from './constant';
+import { IFetchOption } from './constant';
+import KonToast from '@emravoan/kontoast';
 import KonLoader from '@emravoan/konloader';
-import '@emravoan/konloader/dist/bundle.css';
 
 export default class Utils {
-	static async fetch(
-		url: string,
-		method: string,
-		body?: FormData | null,
-		option: IFetchOption = { isShowLoader: true }
-	) {
-		const konloader = KonLoader.getInstance();
-		const { isShowLoader, isReloadOnSuccess, isReloadOnError } = option;
+  static async fetch(
+    method: string,
+    url: string,
+    headers?: HeadersInit,
+    body?: BodyInit,
+    option: IFetchOption = { isShowLoading: true }
+  ) {
+    const { isShowLoading, isReloadOnSuccess, isReloadOnError } = option;
 
-		konloader.initialize();
-		konloader.hide();
-		konloader.hideFlash();
+    if (isShowLoading || typeof isShowLoading === 'undefined') {
+      KonLoader.show();
+    }
 
-		if (isShowLoader || typeof isShowLoader === 'undefined') {
-			konloader.show();
-		}
+    return fetch(url, { method: method?.toUpperCase() || 'GET', headers, body })
+      .then(async res => {
+        // redirect handler
+        if (res.redirected) {
+          window.location.href = res.url;
+          return;
+        }
 
-		return fetch(url, {
-			method: method || 'GET',
-			headers: {
-				Accept: 'application/json',
-				'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZjZmZjkwZDI1OGVkNTdhNjBjNGYyY2Q2ZGZiNzI5MzIzNzNhMDljZmFkMjMwNDIxODBhZTBkMDEyZGUwODc4OTQzZWJlNDA1MDllNGE4MTciLCJpYXQiOjE2Njc4MTM4NzUuOTIyNjExLCJuYmYiOjE2Njc4MTM4NzUuOTIyNjE2LCJleHAiOjE2OTkzNDk4NzUuOTIwMTM5LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.llhkdDpYQCp_ZREtnCgTvvLglNJrPBSNeFeWsiKxEOzncAVJFC5Gcp0AjM81bkNKzUXunac3Sja0RpjkZT94FA`,
-			},
-			body: body,
-		})
-			.then(async res => {
-				// redirect handler
-				if (res.redirected) {
-					window.location.href = res.url;
-					return;
-				}
+        const jsonRes = await res.json();
+        const { message } = jsonRes;
 
-				const jsonRes = await res.json();
-				// const { message } = jsonRes;
+        // throw error
+        if (!res.ok) throw jsonRes;
 
-				// throw error
-				if (!res.ok) throw jsonRes;
+        // show toast and alert
+        if (message) {
+          if (!isReloadOnSuccess) {
+            KonToast.success({
+              title: 'Success',
+              text: message,
+            });
+          }
+        }
 
-				// show toast and alert
-				// if (message) {
-				// 	if (!isReloadOnSuccess) {
-				// 		Utils.initToast(message);
-				// 	}
-				// }
+        if (!isReloadOnSuccess) return jsonRes;
 
-				if (!isReloadOnSuccess) return jsonRes;
+        window.location.reload();
+      })
+      .catch(error => {
+        console.debug(Object.keys(error).length === 0);
+        if (typeof error !== 'object' || Object.keys(error).length === 0) {
+          KonToast.error({
+            title: 'Error',
+            text: `<div class="text-center"><h6 class="mb-1">Oops!</h6>Something went wrong.</div>`,
+          });
+          throw new Error(error);
+        }
 
-				window.location.reload();
-			})
-			.catch(error => {
-				if (typeof error !== 'object' || Object.keys(error).length === 0) {
-					// Utils.initToast(
-					// 	`<div class="text-center"><h6 class="mb-1">Technical Error!</h6>Please contact to administrator.</div>`,
-					// 	'error'
-					// );
-					throw new Error(error);
-				}
+        if (typeof error.message !== 'undefined') {
+          if (!isReloadOnError) {
+            KonToast.error({
+              title: 'Error',
+              text: error.message,
+            });
+          }
+        }
 
-				if (typeof error.message !== 'undefined') {
-					if (!isReloadOnError) {
-						// Utils.initToast(error.message, 'error');
-					} else {
-						// Utils.delCookie(STR_RESMSG_SUCCESS);
-						// Utils.setCookie(STR_RESMSG_ERROR, error.message);
-					}
-				}
+        if (!isReloadOnError) throw error;
 
-				if (!isReloadOnError) throw error;
-
-				window.location.reload();
-			})
-			.finally(() => {
-				if (isShowLoader || typeof isShowLoader === 'undefined') {
-					konloader.hide();
-				}
-			});
-	}
+        window.location.reload();
+      })
+      .finally(() => {
+        if (isShowLoading || typeof isShowLoading === 'undefined') {
+          KonLoader.hide();
+        }
+      });
+  }
 }
