@@ -1,4 +1,4 @@
-name: Publish Package to npmjs
+name: Publish Package to NPM Registry
 
 on:
   workflow_dispatch: # for manual workflow trigger
