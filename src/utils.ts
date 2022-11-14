@@ -8,9 +8,9 @@ export default class Utils {
     url: string,
     headers?: HeadersInit,
     body?: BodyInit,
-    option: IFetchOption = { isShowLoading: true }
+    option: IFetchOption = { isShowLoading: true, isShowToast: true }
   ) {
-    const { isShowLoading, isReloadOnSuccess, isReloadOnError } = option;
+    const { isShowLoading, isShowToast, isReloadOnSuccess, isReloadOnError } = option;
 
     if (isShowLoading || typeof isShowLoading === 'undefined') {
       KonLoader.show();
@@ -32,7 +32,7 @@ export default class Utils {
 
         // show toast and alert
         if (message) {
-          if (!isReloadOnSuccess) {
+          if (!isReloadOnSuccess && (isShowToast || typeof isShowToast === 'undefined')) {
             KonToast.success({
               title: 'Success',
               text: message,
@@ -55,7 +55,7 @@ export default class Utils {
         }
 
         if (typeof error.message !== 'undefined') {
-          if (!isReloadOnError) {
+          if (!isReloadOnError && (isShowToast || typeof isShowToast === 'undefined')) {
             KonToast.error({
               title: 'Error',
               text: error.message,

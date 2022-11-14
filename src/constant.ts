@@ -6,6 +6,7 @@ export interface IObject {
 }
 
 export interface IFetchOption {
+  isShowToast?: boolean;
   isShowLoading?: boolean;
   isReloadOnError?: boolean;
   isReloadOnSuccess?: boolean;

@@ -1,6 +1,6 @@
 {
   "name": "@emravoan/konfetch",
-  "version": "2.0.0-alpha2",
+  "version": "2.0.0-alpha3",
   "description": "Javascript Fetch API Utility",
   "author": "EM Ravoan",
   "license": "MIT",
