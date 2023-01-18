@@ -2,7 +2,7 @@ export const qs = document.querySelector.bind(document);
 export const qsa = document.querySelectorAll.bind(document);
 
 export interface IObject {
-  [index: string]: string;
+  [key: string]: string | null | undefined;
 }
 
 export interface IFetchOption {

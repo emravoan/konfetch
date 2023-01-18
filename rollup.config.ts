@@ -33,10 +33,16 @@ const config = () => {
     },
     {
       input: resolve(root, 'bundle.ts'),
-      output: {
-        file: resolve(outDir, 'bundle.d.ts'),
-        format: 'es',
-      },
+      output: [
+        {
+          file: resolve(outDir, 'bundle.d.ts'),
+          format: 'es',
+        },
+        {
+          file: resolve(__dirname, 'index.d.ts'),
+          format: 'es',
+        },
+      ],
       plugins: [dts(), scss({ output: false })],
     },
   ] as RollupOptions;

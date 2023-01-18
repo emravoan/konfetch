@@ -1,4 +1,4 @@
-import { IFetchOption, IObject } from './constant';
+import type { IFetchOption, IObject } from './constant';
 import Utils from './utils';
 import './scss/app.scss';
 
@@ -27,7 +27,7 @@ export default class KonFetch {
     return Utils.fetch('post', url, headers || [], JSON.stringify(payload), option);
   }
 
-  static put(url: string, headers?: HeadersInit, data?: BodyInit, option?: IFetchOption) {
+  static put(url: string, headers?: HeadersInit, data?: FormData | IObject, option?: IFetchOption) {
     let payload = data;
     if (data instanceof FormData) {
       data.forEach((val, key) => (payload[key] = val));
@@ -35,3 +35,5 @@ export default class KonFetch {
     return Utils.fetch('put', url, headers || [], JSON.stringify(payload), option);
   }
 }
+
+export { IFetchOption, IObject };
