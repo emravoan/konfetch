@@ -6,19 +6,20 @@ export default class Utils {
   static async fetch(
     method: string,
     url: string,
-    headers?: HeadersInit,
+    headers?: Record<string, string>,
     body?: BodyInit,
     option: IFetchOption = { isShowLoading: true, isShowToast: true }
   ) {
-    const { isShowLoading, isShowToast, isReloadOnSuccess, isReloadOnError } = option;
+    const { isShowToast, isShowLoading, isReloadOnError, isReloadOnSuccess } = option;
 
+    // todo: show loading as default
     if (isShowLoading || typeof isShowLoading === 'undefined') {
       KonLoader.show();
     }
 
-    return fetch(url, { method: method?.toUpperCase() || 'GET', headers, body })
+    return fetch(url, { method: method.toUpperCase(), headers, body })
       .then(async res => {
-        // redirect handler
+        // todo: redirect handler
         if (res.redirected) {
           window.location.href = res.url;
           return;
@@ -27,10 +28,10 @@ export default class Utils {
         const jsonRes = await res.json();
         const { message } = jsonRes;
 
-        // throw error
+        // todo: throw error
         if (!res.ok) throw jsonRes;
 
-        // show toast and alert
+        // todo: show success toast
         if (message) {
           if (!isReloadOnSuccess && (isShowToast || typeof isShowToast === 'undefined')) {
             KonToast.success({
@@ -40,12 +41,13 @@ export default class Utils {
           }
         }
 
+        // todo: resolve response
         if (!isReloadOnSuccess) return jsonRes;
 
+        // todo: reload page
         window.location.reload();
       })
       .catch(error => {
-        console.debug(Object.keys(error).length === 0);
         if (typeof error !== 'object' || Object.keys(error).length === 0) {
           KonToast.error({
             title: 'Error',
@@ -55,6 +57,7 @@ export default class Utils {
         }
 
         if (typeof error.message !== 'undefined') {
+          // todo: show error toast
           if (!isReloadOnError && (isShowToast || typeof isShowToast === 'undefined')) {
             KonToast.error({
               title: 'Error',
@@ -63,11 +66,14 @@ export default class Utils {
           }
         }
 
-        if (!isReloadOnError) throw error;
+        // todo: throw error
+        if (!isReloadOnError) throw new Error(error);
 
+        // todo: reload page
         window.location.reload();
       })
       .finally(() => {
+        // todo: hide loader
         if (isShowLoading || typeof isShowLoading === 'undefined') {
           KonLoader.hide();
         }

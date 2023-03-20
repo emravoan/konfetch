@@ -1,38 +1,69 @@
-import type { IFetchOption, IObject } from './constant';
-import Utils from './utils';
 import './scss/app.scss';
+import Utils from './utils';
+import type { IFetchOption, IObject } from './constant';
 
 export default class KonFetch {
-  static get(url: string, headers?: HeadersInit, params?: IObject, option?: IFetchOption) {
+  static async get(url: string, headers: Record<string, string> = {}, params: IObject = {}, option: IFetchOption = {}) {
     const nUrl = new URL(url);
-    Object.entries(params).forEach(param => {
-      nUrl.searchParams.set(param[0], param[1] || '');
+    if (params) {
+      Object.entries(params).forEach(([key, val]) => {
+        nUrl.searchParams.set(key, val?.toString() || '');
+      });
+    }
+    return Utils.fetch('get', nUrl.toString(), headers, null, option);
+  }
+
+  static async post(
+    url: string,
+    headers: Record<string, string> = {},
+    data: FormData | IObject = {},
+    option: IFetchOption = {}
+  ) {
+    const payload = await KonFetch.buildPayload(data);
+    return Utils.fetch('post', url, headers, JSON.stringify(payload), option);
+  }
+
+  static async put(
+    url: string,
+    headers: Record<string, string> = {},
+    data: FormData | IObject = {},
+    option: IFetchOption = {}
+  ) {
+    const payload = await KonFetch.buildPayload(data);
+    return Utils.fetch('put', url, headers, JSON.stringify(payload), option);
+  }
+
+  static async patch(
+    url: string,
+    headers: Record<string, string> = {},
+    data: FormData | IObject = {},
+    option: IFetchOption = {}
+  ) {
+    const payload = await KonFetch.buildPayload(data);
+    return Utils.fetch('patch', url, headers, JSON.stringify(payload), option);
+  }
+
+  static async delete(
+    url: string,
+    headers: Record<string, string> = {},
+    data: FormData | IObject = {},
+    option: IFetchOption = {}
+  ) {
+    const payload = await KonFetch.buildPayload(data);
+    return Utils.fetch('delete', url, headers, JSON.stringify(payload), option);
+  }
+
+  static async buildPayload(data: FormData | IObject) {
+    if (!(data instanceof FormData)) {
+      return data;
+    }
+
+    const payload = {};
+    data.forEach((value, key) => {
+      payload[key] = value;
     });
-    return Utils.fetch('get', nUrl.toString(), headers || [], null, option);
-  }
 
-  static delete(url: string, headers?: HeadersInit, data?: FormData | IObject, option?: IFetchOption) {
-    let payload = data;
-    if (data instanceof FormData) {
-      data.forEach((val, key) => (payload[key] = val));
-    }
-    return Utils.fetch('delete', url, headers || [], JSON.stringify(payload), option);
-  }
-
-  static post(url: string, headers?: HeadersInit, data?: FormData | IObject, option?: IFetchOption) {
-    let payload = data;
-    if (data instanceof FormData) {
-      data.forEach((val, key) => (payload[key] = val));
-    }
-    return Utils.fetch('post', url, headers || [], JSON.stringify(payload), option);
-  }
-
-  static put(url: string, headers?: HeadersInit, data?: FormData | IObject, option?: IFetchOption) {
-    let payload = data;
-    if (data instanceof FormData) {
-      data.forEach((val, key) => (payload[key] = val));
-    }
-    return Utils.fetch('put', url, headers || [], JSON.stringify(payload), option);
+    return payload;
   }
 }
 
