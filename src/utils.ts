@@ -67,7 +67,7 @@ export default class Utils {
         }
 
         // todo: throw error
-        if (!isReloadOnError) throw new Error(error);
+        if (!isReloadOnError) throw error;
 
         // todo: reload page
         window.location.reload();
